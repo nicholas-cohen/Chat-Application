@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 import java.net.*;
 import java.io.IOException;
 
@@ -31,14 +31,14 @@ public class Server{
 
     public void execute(){//change name
     	try{
-    		myService =. new ServerSocket(port);
+    		myService = new ServerSocket(port);
     		System.out.println("Server is listening on port: "+port);
 
     		while(true){
     			Socket userSocket = myService.accept();
     			System.out.println("New Connected User");
     			ClientThread newClient = new ClientThread(userSocket, this);
-    			ClientThreads.add(newUser);
+    			clientThreads.add(newClient);
     			newClient.start();
 
 
@@ -52,7 +52,7 @@ public class Server{
 
     }
 
-		public void deliverMessage(String message, clientThread sourceClient){
+		public void deliverMessage(String message, ClientThread sourceClient){
 			//Code that sends message from one client to another through the server.
 		}
 }

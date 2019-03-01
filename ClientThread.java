@@ -2,14 +2,14 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-public class ClientThread{
+public class ClientThread extends Thread{
 
   private Socket socket;
   private Server server;
   private PrintWriter writer;
 
 
-  public UserThread(Socket socket, Server server) {
+  public ClientThread(Socket socket, Server server) {
     this.socket = socket;
     this.server = server;
   }
@@ -32,7 +32,7 @@ public class ClientThread{
         onlineClients();
 
 
-        String destinationClient = read.readLine()
+        String destinationClient = read.readLine();
         
 
 
@@ -48,11 +48,14 @@ public class ClientThread{
           serverMessage = "[" + clientName + "]: " + message;
           server.deliverMessage(message,this);
         }
-        while(!message != "Exit")
+        while(!(message != "Exit"));
 
 
 
 
+      }catch(IOException e){
+        System.out.println("Error in user thread: " + e.getMessage());
+        e.printStackTrace();
       }
   }
 
