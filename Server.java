@@ -9,9 +9,23 @@ public class Server{
     ServerSocket myService;
 
 
+
+
     public Server(int port){
     	this.port = port;
     }
+
+		public static void main(String[] args) {
+			if (args.length < 1) {
+      	System.out.println("Syntax: java ChatServer <port-number>");
+        System.exit(0);
+
+      }
+
+			int port = Integer.parseInt(args[0]);
+			Server server = new Server(port);
+      server.execute();
+		}
 
 		public void addClientName(String clientName) {
         clientNames.add(clientName);
