@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Server{
 	private int port;
 	private Set<String> clientNames = new HashSet<>();
-    private Set<ClientThread> clientThreads = new HashSet<>();
+ 	ArrayList<ClientThread> clientThreads = new ArrayList<ClientThread>();
     ServerSocket myService;
 
 
@@ -66,16 +66,7 @@ public class Server{
 
     }
 
-		public Set<ClientThread> getClientThreads(){
-			return clientThreads;
-		}
-
-		public void removeUser(String user, ClientThread aUser){
-			boolean removed = clientNames.remove(user);
-			if (removed) {
-    		clientThreads.remove(aUser);
-        System.out.println("The user " + user + " quitted");
-      }
-
+		public void deliverMessage(String message){
+			//
 		}
 }

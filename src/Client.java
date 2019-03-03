@@ -30,7 +30,7 @@ public class Client {
 		ClientReadThread readThread = new ClientReadThread(socket, this);
 
 		//this thread writes to the user thread and it is identified by the socket from the standard input
-		//the input is inputed from the user
+		//the input is inputed from the user 
 		// each user has their own reader and writer thread and is connected to the user thread
 		ClientWriteThread writeThread = new ClientWriteThread(socket, this);
 
@@ -49,12 +49,9 @@ public class Client {
 		this.userName = userName;
 	}
 
-
-
 	public String getUserName(){
 		return this.userName;
 	}
-
 
 
 

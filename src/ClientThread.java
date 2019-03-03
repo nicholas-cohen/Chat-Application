@@ -4,11 +4,10 @@ import java.io.*;
 
 public class ClientThread extends Thread{
 
+  private String name;
   private Socket socket;
   private Server server;
   private PrintWriter writer;
-  private String name;
-  private Socket destinationClientSocket;
 
 
   public ClientThread(Socket socket, Server server) {
@@ -34,18 +33,18 @@ public class ClientThread extends Thread{
 
         onlineClients();
 
-        String destinationClient = read.readLine();
-        destinationClientSocket = getDestinationSocket(destinationClient);
 
         String message;
         String serverMessage;
+        //System.out.println(name);
 
         do{
           message = read.readLine();
+
           serverMessage = "[" + clientName + "]: " + message;
-          sendMessage(message,destinationClientSocket);
+          sendMessage(message);
         }
-        while(!(message != "Exit"));
+        while((message != "Exit"));
 
 
 
@@ -56,42 +55,28 @@ public class ClientThread extends Thread{
       }
   }
 
-
-public Socket getDestinationSocket(String destinationClientName){
-  Socket tempSocket = null;
-  for(ClientThread aClient : server.getClientThreads()){
-    if(aClient.getClientName().equals(destinationClientName)){
-      tempSocket = aClient.getSocket();
-      aClient.setDestinationSocket(this.socket);
-    }
-  }
-  return tempSocket;
-
-}
-
   public void onlineClients(){  //add user has check
       writer.println("Available Users: " + server.getClients());
   }
-
-  public void sendMessage(String msg, Socket destinationSocket){
-    try{
-      OutputStream destinationOutput = destinationSocket.getOutputStream();
-      PrintWriter destinationWriter = new PrintWriter(destinationOutput, true);
-      destinationWriter.println(msg);
-    } catch(IOException e){
-      e.printStackTrace();
-    }
-  }
-
-  public String getClientName(){
+  public String getUserName(){
     return name;
   }
 
-  public Socket getSocket(){
-    return this.socket;
+  public void sendMessage(String message){
+    String[] words = message.split(" ",2);
+
+    String destinationName = words[0].substring(1);
+
+    words[1] = words[1].trim();
+    System.out.println(words[1]);
+    for(int i =0;i<server.clientThreads.size();i++){
+      if(server.clientThreads.get(i).getUserName().equals(destinationName));
+        server.clientThreads.get(i).getPrintWriter().println(words[1]);
+    }
+
   }
 
-  public void setDestinationSocket(Socket tempSocket){
-    destinationClientSocket = tempSocket;
+  public PrintWriter getPrintWriter(){
+    return this.writer;
   }
 }
