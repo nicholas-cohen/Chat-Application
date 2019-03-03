@@ -66,7 +66,16 @@ public class Server{
 
     }
 
-		public void deliverMessage(String message, ClientThread sourceClient){
-			//Code that sends message from one client to another through the server.
+		public Set<ClientThread> getClientThreads(){
+			return clientThreads;
+		}
+
+		public void removeUser(String user, ClientThread aUser){
+			boolean removed = clientNames.remove(user);
+			if (removed) {
+    		clientThreads.remove(aUser);
+        System.out.println("The user " + user + " quitted");
+      }
+
 		}
 }

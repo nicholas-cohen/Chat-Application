@@ -7,6 +7,8 @@ public class ClientThread extends Thread{
   private Socket socket;
   private Server server;
   private PrintWriter writer;
+  private String name;
+  private Socket destinationClientSocket;
 
 
   public ClientThread(Socket socket, Server server) {
@@ -27,18 +29,13 @@ public class ClientThread extends Thread{
         writer = new PrintWriter(output, true);
 
         String clientName =  read.readLine();
+        name = clientName;
         server.addClientName(clientName);
 
         onlineClients();
 
-
         String destinationClient = read.readLine();
-        
-
-
-
-
-
+        destinationClientSocket = getDestinationSocket(destinationClient);
 
         String message;
         String serverMessage;
@@ -46,7 +43,7 @@ public class ClientThread extends Thread{
         do{
           message = read.readLine();
           serverMessage = "[" + clientName + "]: " + message;
-          server.deliverMessage(message,this);
+          sendMessage(message,destinationClientSocket);
         }
         while(!(message != "Exit"));
 
@@ -59,11 +56,42 @@ public class ClientThread extends Thread{
       }
   }
 
+
+public Socket getDestinationSocket(String destinationClientName){
+  Socket tempSocket = null;
+  for(ClientThread aClient : server.getClientThreads()){
+    if(aClient.getClientName().equals(destinationClientName)){
+      tempSocket = aClient.getSocket();
+      aClient.setDestinationSocket(this.socket);
+    }
+  }
+  return tempSocket;
+
+}
+
   public void onlineClients(){  //add user has check
       writer.println("Available Users: " + server.getClients());
   }
 
-  public void sendMessage(String msg){
-    writer.println(msg);
+  public void sendMessage(String msg, Socket destinationSocket){
+    try{
+      OutputStream destinationOutput = destinationSocket.getOutputStream();
+      PrintWriter destinationWriter = new PrintWriter(destinationOutput, true);
+      destinationWriter.println(msg);
+    } catch(IOException e){
+      e.printStackTrace();
+    }
+  }
+
+  public String getClientName(){
+    return name;
+  }
+
+  public Socket getSocket(){
+    return this.socket;
+  }
+
+  public void setDestinationSocket(Socket tempSocket){
+    destinationClientSocket = tempSocket;
   }
 }
