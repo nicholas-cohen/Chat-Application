@@ -26,7 +26,7 @@ public class ClientReadThread extends Thread{
 			try{
 				String response = reader.readLine();
 				System.out.println("\n"+response);
-
+				
 				if(client.getUserName()!=null){
 					System.out.print("[" + client.getUserName() + "]: ");
 				}

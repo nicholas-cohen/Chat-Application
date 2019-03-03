@@ -27,8 +27,7 @@ public class ClientWriteThread extends Thread {
     client.setUserName(clientName);
     writer.println(clientName);
     String text;
-    //String destinationClient = console.readLine("\nEnter the person with whom you'd like to chat with: ");
-    //client.setDestinationClient(destinationClient);
+    
 
     do{
       text = console.readLine("[" + clientName + "]: ");

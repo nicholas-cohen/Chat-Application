@@ -47,6 +47,7 @@ public class Server{
     	try{
     		myService = new ServerSocket(port);
     		System.out.println("Server is listening on port: "+port);
+				System.out.println("Ip Address: "+myService.getInetAddress());
 
     		while(true){
     			Socket userSocket = myService.accept();

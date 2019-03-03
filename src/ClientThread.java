@@ -71,7 +71,7 @@ public class ClientThread extends Thread{
     System.out.println(words[1]);
     for(int i =0;i<server.clientThreads.size();i++){
       if(server.clientThreads.get(i).getUserName().equals(destinationName));
-        server.clientThreads.get(i).getPrintWriter().println(words[1]);
+        server.clientThreads.get(i).getPrintWriter().println("[" + name + "]: "+words[1]);
     }
 
   }
