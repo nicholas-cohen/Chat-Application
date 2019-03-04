@@ -7,7 +7,6 @@ public class ClientWriteThread extends Thread {
   private Socket socket;
   private Client client;
 
-
   public ClientWriteThread(Socket socket, Client client){
     this.socket = socket;
     this.client = client;
@@ -31,10 +30,11 @@ public class ClientWriteThread extends Thread {
 
     do{
       text = console.readLine("[" + clientName + "]: ");
+
+      String inputCheck = client.getMessagingProtocol().processInput(text);
       int state = client.getMessagingProtocol().getState();
-      if(state < 4){
-          System.out.println("here");
-          System.out.println(client.getMessagingProtocol().processInput(text));
+      if(state < 5){
+          System.out.println(inputCheck);
           client.getMessagingProtocol().setState(1);
       }
       else{
@@ -50,17 +50,17 @@ public class ClientWriteThread extends Thread {
     }
   }
 
-  // public void sendFile(File file){
-  //   DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-  //   FileInputStream fis = new FileInputStream(file);
-  //   byte[] buffer = new byte[4096];
-  //   int read;
-  //   while ((read =fis.read(buffer)) > 0) {
-  //     dos.write(buffer,0,read);
-  //   }
-  //
-  //   fis.close();
-  //   dos.close();
-  //
-  // }
+    public void sendFile(File file){
+    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+    FileInputStream fis = new FileInputStream(file);
+    byte[] buffer = new byte[4096];
+    int read;
+    while ((read =fis.read(buffer)) > 0) {
+      dos.write(buffer,0,read);
+    }
+
+    fis.close();
+    dos.close();
+
+  }
 }

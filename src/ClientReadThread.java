@@ -31,7 +31,7 @@ public class ClientReadThread extends Thread{
 
 				if(client.getUserName()!=null){
 					//---------> LOOK INTO NEXT LINE
-					System.out.print("[" + client.getUserName() + "]: ");
+						System.out.print("[" + client.getUserName() + "]: ");
 				}
 
 			}catch(IOException e){

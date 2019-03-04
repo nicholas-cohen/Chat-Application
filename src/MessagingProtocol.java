@@ -10,18 +10,20 @@ public class MessagingProtocol{
   private int CONNECTED =1;
   private int SYNTAX_CHECK =2;
   private int NULL_CHECK =3;
-  private int MSG_SENDING =4;
+  private int MSG_SENDING =5;
+  private int FILE_SYNTAX = 4;
 
   private int STATE;
-  private String syntaxErrorString="";
-  private String nullErrorString="";
 
+//@matt file cat.jpeg
 
   public MessagingProtocol(){
     STATE = WAITING_CONNECTION;
   }
 
   public String processInput(String inputString){
+      String syntaxErrorString="";
+      String nullErrorString="";
       if(STATE == WAITING_CONNECTION){
         if(inputString.equals("Connected to Server"))
           STATE = CONNECTED;
@@ -31,17 +33,20 @@ public class MessagingProtocol{
       if(STATE == SYNTAX_CHECK){
         if(SyntaxCheck(inputString)){
           STATE = NULL_CHECK;
+
         }
         else{
           syntaxErrorString = "Syntax error: Format = @ReceiverName message";
         }
       }
 
+      String[] fileOrMessageCheckString = inputString.split(" ",)
+
       if(STATE == NULL_CHECK){
           if(nullCheck(inputString))
             STATE = MSG_SENDING;
           else
-            nullErrorString = " You have not entered a message";
+            nullErrorString = "You have not entered a message";
       }
 
       //file transfer check
@@ -50,7 +55,7 @@ public class MessagingProtocol{
       // if(fileHeaderCheck[0].equals("file")){
       //}
 
-      outputString = syntaxErrorString + nullErrorString;
+      outputString = syntaxErrorString + " " + nullErrorString;
       //System.out.pritln(outputString);
       return outputString;
 
@@ -77,14 +82,25 @@ public class MessagingProtocol{
     return temp;
   }
 
+
   public boolean nullCheck(String nullCheck){
     boolean temp = false;
-    String[] stringCut = nullCheck.split(" ",2);
 
-    if(stringCut[1] != null)
+    String[] stringCut = nullCheck.split(" ",2);
+    if (stringCut.length == 1)
+      return temp;
+
+
+    stringCut[1] = stringCut[1].trim();
+
+    if(!stringCut[1].equals(""))
       temp = true;
 
     return temp;
+  }
+
+  public boolean fileSyntaxCheck(String fileCheck){
+    boolean temp = false;
   }
 
 
