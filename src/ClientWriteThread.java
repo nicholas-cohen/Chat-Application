@@ -37,6 +37,11 @@ public class ClientWriteThread extends Thread {
           System.out.println(inputCheck);
           client.getMessagingProtocol().setState(1);
       }
+      else if(state == 6){
+        String[] tempStringArray = text.split(" ",3);
+        sendFile(tempStringArray[2]);
+      }
+
       else{
         writer.println(text);
         client.getMessagingProtocol().setState(1);
@@ -50,17 +55,26 @@ public class ClientWriteThread extends Thread {
     }
   }
 
-    public void sendFile(File file){
-    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-    FileInputStream fis = new FileInputStream(file);
-    byte[] buffer = new byte[4096];
-    int read;
-    while ((read =fis.read(buffer)) > 0) {
-      dos.write(buffer,0,read);
+
+  public void sendFile(String file){
+      FileInputStream fis =null;
+      BufferedInputStream bis = null;
+      OutputStream os = null;
+      try{
+        File myFile = new File (file);
+        System.out.println(file);
+          byte [] mybytearray  = new byte [(int)myFile.length()];
+          fis = new FileInputStream(myFile);
+          bis = new BufferedInputStream(fis);
+          bis.read(mybytearray,0,mybytearray.length);
+          os = socket.getOutputStream();
+          System.out.println("Sending " + file + "(" + mybytearray.length + " bytes)");
+          os.write(mybytearray,0,mybytearray.length);
+          os.flush();
+          System.out.println("Done.");
+      }catch(IOException e){
+        System.out.println("Input Error: "+e.getMessage());
+      }
+
     }
-
-    fis.close();
-    dos.close();
-
-  }
 }

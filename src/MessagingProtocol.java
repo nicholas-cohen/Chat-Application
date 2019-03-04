@@ -12,6 +12,7 @@ public class MessagingProtocol{
   private int NULL_CHECK =3;
   private int MSG_SENDING =5;
   private int FILE_SYNTAX = 4;
+  private int FILE_SENDING = 6;
 
   private int STATE;
 
@@ -24,6 +25,7 @@ public class MessagingProtocol{
   public String processInput(String inputString){
       String syntaxErrorString="";
       String nullErrorString="";
+      String fileError="";
       if(STATE == WAITING_CONNECTION){
         if(inputString.equals("Connected to Server"))
           STATE = CONNECTED;
@@ -46,8 +48,11 @@ public class MessagingProtocol{
       else
         STATE = NULL_CHECK;
 
-      if(STATE = FILE_SYNTAX){
-
+      if(STATE == FILE_SYNTAX){
+        if(fileSyntaxCheck(inputString))
+          STATE = FILE_SENDING;
+        else
+          fileError = "File does not exit or File syntax is incorrect";
       }
 
       if(STATE == NULL_CHECK){
@@ -57,14 +62,8 @@ public class MessagingProtocol{
             nullErrorString = "You have not entered a message";
       }
 
-      //file transfer check
-      // String fileHeaderCheck = inputString.substring(1);
-      // fileHeaderCheck = fileHeaderCheck.split[" ",2];
-      // if(fileHeaderCheck[0].equals("file")){
-      //}
 
-      outputString = syntaxErrorString + " " + nullErrorString;
-      //System.out.pritln(outputString);
+      outputString = syntaxErrorString + " " + nullErrorString+" "+fileError;
       return outputString;
 
   }
@@ -112,6 +111,11 @@ public class MessagingProtocol{
     String syntaxString[] = fileCheck.split(" ",3);
     if(syntaxString[1].equals("$file"))
       temp = true;
+    /*File file = new File("Users/nicholascohen/Desktop/chatapp/src/"+syntaxString[2]);
+    if(!file.exists()){
+        temp = false;*/
+    
+    return temp;
 
   }
 
