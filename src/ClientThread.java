@@ -77,9 +77,15 @@ public class ClientThread extends Thread{
 
     words[1] = words[1].trim();
     System.out.println(words[1]);
+    boolean check = false;
     for(int i =0;i<server.clientThreads.size();i++){
-      if(server.clientThreads.get(i).getUserName().equals(destinationName));
+      if(server.clientThreads.get(i).getUserName().equals(destinationName)){
         server.clientThreads.get(i).getPrintWriter().println("[" + name + "]: "+words[1]);
+        check = true;
+      }
+    }
+    if(check == false){
+      writer.println("Error: Could not find name of User / User is not online");
     }
 
   }

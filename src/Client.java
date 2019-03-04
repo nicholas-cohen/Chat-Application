@@ -10,6 +10,7 @@ public class Client {
 	private static int port;
 	private String hostName;
 	private String userName;
+	private MessagingProtocol mp;
 
 	public Client(String hostname,int port){
 		this.hostName= hostName; //IP address
@@ -19,11 +20,11 @@ public class Client {
 	public void executeClient(){
 		try{
 
-
+		mp = new MessagingProtocol();
 		//tries to connect the client to server
 		Socket socket = new Socket(hostName, port);
-
 		System.out.println("Connected to Server");
+		mp.processInput("Connected to Server");
 
 		//starts thread to reads the servers input and writes it to standard
 		//output
@@ -52,6 +53,11 @@ public class Client {
 	//returns the username of a client
 	public String getUserName(){
 		return this.userName;
+	}
+
+	//return the mp object
+	public MessagingProtocol getMessagingProtocol(){
+		return mp;
 	}
 
 
