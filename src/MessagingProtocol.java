@@ -40,7 +40,15 @@ public class MessagingProtocol{
         }
       }
 
-      String[] fileOrMessageCheckString = inputString.split(" ",)
+      String[] fileOrMessageCheckString = inputString.split(" ",2);
+      if(fileOrMessageCheckString[1].substring(0,1).equals("$"))
+        STATE = FILE_SYNTAX;
+      else
+        STATE = NULL_CHECK;
+
+      if(STATE = FILE_SYNTAX){
+
+      }
 
       if(STATE == NULL_CHECK){
           if(nullCheck(inputString))
@@ -101,6 +109,10 @@ public class MessagingProtocol{
 
   public boolean fileSyntaxCheck(String fileCheck){
     boolean temp = false;
+    String syntaxString[] = fileCheck.split(" ",3);
+    if(syntaxString[1].equals("$file"))
+      temp = true;
+
   }
 
 
