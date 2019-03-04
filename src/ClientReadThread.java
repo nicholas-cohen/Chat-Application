@@ -11,23 +11,26 @@ public class ClientReadThread extends Thread{
 		this.socket = socket;
 		this.client = client;
 
-
-	try{
-		InputStream input = socket.getInputStream();
-		reader = new BufferedReader(new InputStreamReader(input));
-	}catch(IOException e){
-		System.out.println("Error in getting message from server: "+e.getMessage());
-		e.printStackTrace();
+		//creates and inputstream and a reader for it
+		try{
+			InputStream input = socket.getInputStream();
+			reader = new BufferedReader(new InputStreamReader(input));
+		}catch(IOException e){
+			System.out.println("Error in getting message from server: "+e.getMessage());
+			e.printStackTrace();
+			}
 		}
-	}
 
 	public void run(){
 		while(true){
 			try{
+				//Reads the response from the server and prints it out to the client console
 				String response = reader.readLine();
 				System.out.println("\n"+response);
-				
+
+
 				if(client.getUserName()!=null){
+					//---------> LOOK INTO NEXT LINE
 					System.out.print("[" + client.getUserName() + "]: ");
 				}
 

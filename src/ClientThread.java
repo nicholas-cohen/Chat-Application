@@ -23,23 +23,24 @@ public class ClientThread extends Thread{
         BufferedReader read = new BufferedReader(new InputStreamReader(input));
         //writes to the clients writer thread over current socket
         OutputStream output = socket.getOutputStream();
-
-
         writer = new PrintWriter(output, true);
+        //reads input from client and adds the input as a name to the server client list
         String clientName =  read.readLine();
         name = clientName;
         server.addClientName(clientName);
+
+        //Prints the names on online user
         onlineClients();
 
 
         String message;
-        String serverMessage;
         //System.out.println(name);
 
+        /* Continuously checks the message sent by the client and executes
+        the method that sends it to the destination client.  Quits if user enters: Exit.
+        */
         do{
           message = read.readLine();
-
-          serverMessage = "[" + clientName + "]: " + message;
           sendMessage(message);
         }
         while((message != "Exit"));
@@ -53,13 +54,22 @@ public class ClientThread extends Thread{
       }
   }
 
+  //prints out the set of online users
   public void onlineClients(){  //add user has check
       writer.println("Available Users: " + server.getClients());
   }
+
+
   public String getUserName(){
     return name;
   }
 
+  /*
+  This method is responsible for sending the message from one client to another.
+
+  It splits the message into an array of size 2, checks the first element for the destination
+  name and sends to that client the second element of the array (the message)
+  */
   public void sendMessage(String message){
     String[] words = message.split(" ",2);
 
@@ -74,9 +84,10 @@ public class ClientThread extends Thread{
 
   }
 
+  //returns the PrintWriter object from a specific clientThread
   public PrintWriter getPrintWriter(){
     return this.writer;
   }
 
-  
+
 }
