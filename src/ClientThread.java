@@ -17,20 +17,18 @@ public class ClientThread extends Thread{
 
   public void run(){
       try{
-
         //get input from the reader thread of that client over that socket
         InputStream input = socket.getInputStream();
         //read input from the writer thread of client over that socket
         BufferedReader read = new BufferedReader(new InputStreamReader(input));
-
         //writes to the clients writer thread over current socket
         OutputStream output = socket.getOutputStream();
-        writer = new PrintWriter(output, true);
 
+
+        writer = new PrintWriter(output, true);
         String clientName =  read.readLine();
         name = clientName;
         server.addClientName(clientName);
-
         onlineClients();
 
 
@@ -79,4 +77,6 @@ public class ClientThread extends Thread{
   public PrintWriter getPrintWriter(){
     return this.writer;
   }
+
+  
 }

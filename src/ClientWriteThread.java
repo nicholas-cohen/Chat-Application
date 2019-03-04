@@ -27,7 +27,7 @@ public class ClientWriteThread extends Thread {
     client.setUserName(clientName);
     writer.println(clientName);
     String text;
-    
+
 
     do{
       text = console.readLine("[" + clientName + "]: ");
@@ -39,5 +39,19 @@ public class ClientWriteThread extends Thread {
     }catch (IOException ex){
       System.out.println("Error writing to server: " + ex.getMessage());
     }
+  }
+
+  public sendFile(File file){
+    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+    FileInputStream fis = new FileInputStream(file);
+    byte[] buffer = new byte[4096];
+    int read;
+    while ((read =fis.read(buffer)) > 0) {
+      dos.write(buffer,0,read);
+    }
+
+    fis.close();
+    dos.close();
+
   }
 }
