@@ -10,7 +10,7 @@ public class ClientReadThread extends Thread{
 	public ClientReadThread(Socket socket, Client client){
 		this.socket = socket;
 		this.client = client;
-	
+
 
 	try{
 		InputStream input = socket.getInputStream();
@@ -26,9 +26,9 @@ public class ClientReadThread extends Thread{
 			try{
 				String response = reader.readLine();
 				System.out.println("\n"+response);
-
+				
 				if(client.getUserName()!=null){
-					System.out.println("[" + client.getUserName() + "]: ");
+					System.out.print("[" + client.getUserName() + "]: ");
 				}
 
 			}catch(IOException e){
@@ -39,4 +39,3 @@ public class ClientReadThread extends Thread{
 		}
 	}
 }
-
