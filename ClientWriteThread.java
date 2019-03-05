@@ -7,7 +7,6 @@ public class ClientWriteThread extends Thread {
   private Socket socket;
   private Client client;
 
-
   public ClientWriteThread(Socket socket, Client client){
     this.socket = socket;
     this.client = client;
@@ -26,8 +25,67 @@ public class ClientWriteThread extends Thread {
     String clientName = console.readLine("\nEnter your name: ");
     client.setUserName(clientName);
     writer.println(clientName);
-    String destinationClient = console.readLine("\nEnter the person with whom you'd like to chat with: ");
-    //client.setDestinationClient(destinationClient);
+    String text;
+    try{
+      Thread.sleep(500);
+    }
+    catch(InterruptedException e){
+      System.out.print("Error");
+    }
 
+    do{
+      //replace with scanner
+      text = console.readLine("[" + clientName + "]: ");
+
+      String inputCheck = client.getMessagingProtocol().processInput(text);
+      int state = client.getMessagingProtocol().getState();
+      if(state==7){
+        writer.println(text);
+        client.getMessagingProtocol().setState(1);
+        break;
+      }
+      else if(state < 5){
+          System.out.println(inputCheck);
+          client.getMessagingProtocol().setState(1);
+      }else if(state == 6){
+          String[] tempInputStringArray = text.split(" ",3);
+          String fileName = tempInputStringArray[2];
+          sendFile(fileName);
+          client.getMessagingProtocol().setState(1);
+      }else if(state == 9){
+        System.out.println(inputCheck);
+        client.getMessagingProtocol().setState(1);
+      }
+      else{
+        writer.println(text);
+        client.getMessagingProtocol().setState(1);
+      }
+    }while(!text.equals("Exit"));
+
+    try{
+      socket.close();
+    }catch (IOException ex){
+      System.out.println("Error writing to server: " + ex.getMessage());
+    }
   }
+
+    public void sendFile(String file){
+      FileInputStream fis=null;
+      BufferedInputStream bis=null;
+      OutputStream os=null;
+      try{
+      File myFile = new File (file);
+          byte [] mybytearray  = new byte [(int)myFile.length()];
+          fis = new FileInputStream(myFile);
+          bis = new BufferedInputStream(fis);
+          bis.read(mybytearray,0,mybytearray.length);
+          os = socket.getOutputStream();
+          System.out.println("Sending " + file + "(" + mybytearray.length + " bytes)");
+          os.write(mybytearray,0,mybytearray.length);
+          os.flush();
+          System.out.println("Done.");
+        }catch(IOException e){
+          System.out.println("Input Error: "+e.getMessage());
+        }
+    }
 }
