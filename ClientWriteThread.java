@@ -48,10 +48,32 @@ public class ClientWriteThread extends Thread {
           System.out.println(inputCheck);
           client.getMessagingProtocol().setState(1);
       }else if(state == 6){
-          String[] tempInputStringArray = text.split(" ",3);
-          String fileName = tempInputStringArray[2];
-          sendFile(fileName);
+        String[] clientRequestName = text.split(" ",2);
+        writer.println(clientRequestName[0]+" A file is being sent to you, To Accept: @DestinationName #Accept    -     To Decline: @DestinationName #Decline");
+        client.getMessagingProtocol().setState(10);
+
+
+        int current_state = client.getMessagingProtocol().getState();
+        while(current_state == 10){
+          current_state = client.getMessagingProtocol().getState();
+          try{this.sleep(100);}
+          catch(InterruptedException e){
+            System.out.println(e.getMessage());
+          }
+        }
+
+        if(current_state == 11){
+          writer.println(text);
+          String[] tempStringArray = text.split(" ",3);
+          sendFile(tempStringArray[2]);
+
+          //MIGHT BE PROBLEMATIC >
           client.getMessagingProtocol().setState(1);
+        }
+        else if(current_state == 12)
+          System.out.println("File Transfer declined");
+          //MIGHT BE PROBLEMATIC>
+        client.getMessagingProtocol().setState(1);
       }else if(state == 9){
         System.out.println(inputCheck);
         client.getMessagingProtocol().setState(1);
@@ -69,12 +91,13 @@ public class ClientWriteThread extends Thread {
     }
   }
 
-    public void sendFile(String file){
-      FileInputStream fis=null;
-      BufferedInputStream bis=null;
-      OutputStream os=null;
+  public void sendFile(String file){
+      FileInputStream fis =null;
+      BufferedInputStream bis = null;
+      OutputStream os = null;
       try{
-      File myFile = new File (file);
+        File myFile = new File (file);
+        System.out.println(file);
           byte [] mybytearray  = new byte [(int)myFile.length()];
           fis = new FileInputStream(myFile);
           bis = new BufferedInputStream(fis);
@@ -84,8 +107,9 @@ public class ClientWriteThread extends Thread {
           os.write(mybytearray,0,mybytearray.length);
           os.flush();
           System.out.println("Done.");
-        }catch(IOException e){
-          System.out.println("Input Error: "+e.getMessage());
-        }
+      }catch(IOException e){
+        System.out.println("Input Error: "+e.getMessage());
+      }
+
     }
 }

@@ -7,6 +7,12 @@ public class ClientReadThread extends Thread{
 	private Socket socket;
 	private Client client;
 	private boolean ready=false;
+	//changes
+	private InputStream input;
+	FileOutputStream fos;
+	BufferedOutputStream bos;
+	byte [] mybytearray;
+	int bytesRead;
 
 	public ClientReadThread(Socket socket, Client client){
 		this.socket = socket;
@@ -14,7 +20,7 @@ public class ClientReadThread extends Thread{
 
 		//creates and inputstream and a reader for it
 		try{
-			InputStream input = socket.getInputStream();
+			input = socket.getInputStream();
 			reader = new BufferedReader(new InputStreamReader(input));
 		}catch(IOException e){
 			System.out.println("Error in getting message from server: "+e.getMessage());
@@ -28,11 +34,27 @@ public class ClientReadThread extends Thread{
 				//Reads the response from the server and prints it out to the client console
 
 				String response = reader.readLine();
-				System.out.println("\n"+response);
 
-				//send the respone to the protocol class and check if it is the available users string
-				// client.getMessagingProtocol().processOutput(response);
-				// client.getMessagingProtocol().setState(1);
+				if(client.getMessagingProtocol().getState() == 10){
+					String[] clientResponse = response.split(" ",2);
+
+					if(clientResponse[1].equals("#Accept")){
+						client.getMessagingProtocol().setState(11);
+					}
+					else if(clientResponse[1].equals("#Decline"))
+						client.getMessagingProtocol().setState(12);
+				}
+
+
+				else if(fileCheck(response)){
+					System.out.println("\n"+response);
+					receiveFile();
+				}else{
+
+				System.out.println("\n"+response);
+}
+
+
 
 				if(client.getUserName()!=null){
 					//---------> LOOK INTO NEXT LINE after reading from server
@@ -48,23 +70,25 @@ public class ClientReadThread extends Thread{
 		}
 	}
 
-	public void receiveFile(File file){
-		DataOutputStream dos;
-		FileInputStream fis;
-			try{
-			dos = new DataOutputStream(socket.getOutputStream());
-			fis = new FileInputStream(file);
-			byte[] buffer = new byte[4096];
-			int read;
-			while ((read =fis.read(buffer)) > 0) {
-				dos.write(buffer,0,read);
-			}
-			fis.close();
-			dos.close();
-		}catch(IOException e){
-			System.out.println("File not found: "+e.getMessage());
+	public void receiveFile(){
+		try{
+			mybytearray  = new byte [4096];
+			fos = new FileOutputStream("testReceived.txt");
+			bos = new BufferedOutputStream(fos);
+			bytesRead = input.read(mybytearray,0,mybytearray.length);
+			bos.write(mybytearray, 0 ,mybytearray.length);
+			bos.flush();
+		}catch(IOException ex){
+			System.out.println(ex.getMessage());
 		}
-
+		System.out.println("File Received");
 }
 
+	public boolean fileCheck(String check){
+		boolean temp= false;
+		String[] words = check.split(" ",2);
+		if(words[1].equals("You are currently receiving a file"))
+			temp = true;
+		return temp;
+	}
 }

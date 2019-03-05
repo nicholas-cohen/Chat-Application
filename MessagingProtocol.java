@@ -18,8 +18,9 @@ public class MessagingProtocol{
   private int EXITING = 7;
   private int FETCHING_USERS = 8;
   private int BANDWIDTH_CHECK = 9;
-  private int LARGE_FILE = 10;
-
+  private int AWAITING_FILE_RESPONSE = 10;
+  private int FILE_ACCEPTED=11;
+  private int FILE_REJECTED=12;
   private int STATE;
 
 //@matt file cat.jpeg
@@ -151,9 +152,7 @@ public class MessagingProtocol{
     String syntaxString[] = fileCheck.split(" ",3);
     if(syntaxString[1].equals("$file"))
       temp = true;
-    File file = new File(syntaxString[2]);
-    if(!file.exists())
-      temp=false;
+    
     return temp;
   }
 
