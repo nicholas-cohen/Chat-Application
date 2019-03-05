@@ -30,7 +30,6 @@ public class ClientWriteThread extends Thread {
 
     do{
       text = console.readLine("[" + clientName + "]: ");
-
       String inputCheck = client.getMessagingProtocol().processInput(text);
       int state = client.getMessagingProtocol().getState();
       if(state < 5){
@@ -38,8 +37,32 @@ public class ClientWriteThread extends Thread {
           client.getMessagingProtocol().setState(1);
       }
       else if(state == 6){
-        String[] tempStringArray = text.split(" ",3);
-        sendFile(tempStringArray[2]);
+        String[] clientRequestName = text.split(" ",2);
+        writer.println(clientRequestName[0]+" A file is being sent to you, To Accept: @DestinationName #Accept    -     To Decline: @DestinationName #Decline");
+        client.getMessagingProtocol().setState(10);
+
+
+        int current_state = client.getMessagingProtocol().getState();
+        while(current_state == 10){
+          current_state = client.getMessagingProtocol().getState();
+          try{this.sleep(100);}
+          catch(InterruptedException e){
+            System.out.println(e.getMessage());
+          }
+        }
+
+        if(current_state == 11){
+          writer.println(text);
+          String[] tempStringArray = text.split(" ",3);
+          sendFile(tempStringArray[2]);
+
+          //MIGHT BE PROBLEMATIC >
+          client.getMessagingProtocol().setState(1);
+        }
+        else if(current_state == 12)
+          System.out.println("File Transfer declined");
+          //MIGHT BE PROBLEMATIC>
+          client.getMessagingProtocol().setState(1);
       }
 
       else{

@@ -13,7 +13,9 @@ public class MessagingProtocol{
   private int MSG_SENDING =5;
   private int FILE_SYNTAX = 4;
   private int FILE_SENDING = 6;
-
+  private int AWAITING_FILE_RESPONSE = 10;
+  private int FILE_ACCEPTED =11;
+  private int FILE_REJECTED =12;
   private int STATE;
 
 //@matt file cat.jpeg
@@ -114,7 +116,7 @@ public class MessagingProtocol{
     /*File file = new File("Users/nicholascohen/Desktop/chatapp/src/"+syntaxString[2]);
     if(!file.exists()){
         temp = false;*/
-    
+
     return temp;
 
   }
