@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class ClientReadThread extends Thread{
 
@@ -80,20 +81,33 @@ public class ClientReadThread extends Thread{
 			int result = jfc.showSaveDialog(null);
 			if(result == JFileChooser.CANCEL_OPTION)
 				return;
-			fos = new FileOutputStream(jfc.getSelectedFile());
 
-			mybytearray  = new byte [128];
-			int bytesRead=0;
-			while((bytesRead=input.read(mybytearray))>0){
-				fos.write(mybytearray,0,bytesRead);
-			}
-			fos.flush();
+			fos = new FileOutputStream(jfc.getSelectedFile());
+			bos = new BufferedOutputStream(fos);
+			mybytearray  = new byte [4096];
+			bytesRead = input.read(mybytearray,0,mybytearray.length);
+			byte[] bytesTrimmed = trim(mybytearray);
+			System.out.println("Sending... "+bytesTrimmed);
+
+			bos.write(bytesTrimmed, 0 ,bytesTrimmed.length);
+			bos.flush();
+			bos.close();
+			fos.close();
 
 		}catch(IOException ex){
 			System.out.println(ex.getMessage());
 		}
 		System.out.println("File Received");
-}
+	}
+
+	public byte[] trim(byte[] bytes){
+		int i = bytes.length-1;
+		while(i>=0 && bytes[i]==0){
+			i--;
+		}
+		return Arrays.copyOf(bytes,i+1);
+		
+	}
 
 	public boolean fileCheck(String check){
 		boolean temp= false;

@@ -72,7 +72,7 @@ public class MessagingProtocol{
             if(fileSyntaxCheck(inputString))
               STATE = FILE_SENDING;
             else
-              fileError = "Syntax Error: File send syntax error.";
+              fileError = "File does not exist or it is not a file";
         }
       }
 
@@ -119,6 +119,8 @@ public class MessagingProtocol{
 
   public boolean SyntaxCheck(String atCheck){
     boolean temp = false;
+    if(atCheck.equals("Syntax"))
+      return true;
     if(atCheck.equals("")){
       return temp;
     }
@@ -149,10 +151,10 @@ public class MessagingProtocol{
 
   public boolean fileSyntaxCheck(String fileCheck){
     boolean temp = false;
-    String syntaxString[] = fileCheck.split(" ",2);
+    String syntaxString[] = fileCheck.split(" ",3);
     if(syntaxString[1].equals("$file"))
       temp = true;
-    
+
     return temp;
   }
 

@@ -10,6 +10,7 @@ public class ClientWriteThread extends Thread {
   private PrintWriter writer;
   private Socket socket;
   private Client client;
+  private String syntaxString="\nSYNTAX OF CHAT APP:"+"\nMessages: @ReceiverName message\n"+"File: @ReceiverName $file\n"+"Exiting: Exit\n"+"Check Syntax: Syntax\n";
 
   public ClientWriteThread(Socket socket, Client client){
     this.socket = socket;
@@ -26,6 +27,7 @@ public class ClientWriteThread extends Thread {
 
   public void run(){
     Console console = System.console();
+	System.out.println(syntaxString);
     String clientName = console.readLine("\nEnter your name: ");
     client.setUserName(clientName);
     writer.println(clientName);
@@ -41,6 +43,10 @@ public class ClientWriteThread extends Thread {
       //replace with scanner
       text = console.readLine("[" + clientName + "]: ");
 
+	//check if client wants to check the syntax
+    if(text.equals("Syntax")){
+    	System.out.println(syntaxString);
+	}else{
       String inputCheck = client.getMessagingProtocol().processInput(text);
       int state = client.getMessagingProtocol().getState();
       if(state==7){
@@ -103,6 +109,7 @@ public class ClientWriteThread extends Thread {
         writer.println(text);
         client.getMessagingProtocol().setState(1);
       }
+  }
     }while(!text.equals("Exit"));
 
     try{
